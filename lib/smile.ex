@@ -1,0 +1,2 @@
+defmodule Smile do
+end
