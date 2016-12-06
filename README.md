@@ -10,7 +10,7 @@ convert_text("my emoji game is :ok_hand_sign:")
 
 This is just an experiment to examine metaprogramming in Elixir, there's known limitations:
     
-1. Emojis in the middle of other don't work, ex.: ":woo:pile_of_poo:hoo:" would not work
+1. Emojis in the middle of other don't work, ex.: ":woo:pile_of_poo:hoo:" would not convert the `:pile_of_poo:` in the middle
 
 Ideas, suggestions, contributions welcome, just drop me a line at [hello@danielgulyas.me](hello@danielgulyas.me)
 
