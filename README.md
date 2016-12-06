@@ -1,6 +1,17 @@
 # Smile
 
-**TODO: Add description**
+Small lib for converting emoji mappers to emoji characters, like in Slack messages:
+
+```elixir
+import Smile
+convert_text("my emoji game is :ok_hand_sign:")
+# > "my emoji game is 👌"
+```
+
+This is just an experiment to examine metaprogramming in Elixir, there's known limitations:
+    1. Emojis in the middle of other don't work, ex.: ":woo:pile_of_poo:hoo:" would not work
+
+Ideas, suggestions, contributions welcome, just drop me a line at [hello@danielgulyas.me](hello@danielgulyas.me)
 
 ## Installation
 
