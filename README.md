@@ -16,7 +16,7 @@ Ideas, suggestions, contributions welcome, just drop me a line at [hello@danielg
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+Available in Hex, the package can be installed as:
 
   1. Add `smile` to your list of dependencies in `mix.exs`:
 
