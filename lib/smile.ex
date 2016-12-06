@@ -1,7 +1,7 @@
 defmodule Smile do
   @moduledoc "Module for converting mapped emojis to real emojis slack-like emoji conversions."
   
-  @exterternal_resource file_path = Path.join([__DIR__, "emojis.txt"])
+  @external_resource file_path = Path.join([__DIR__, "emojis.txt"])
 
   for line <- File.stream!(file_path, [], :line) do
     [emoji, name] = line |> String.split(" ") |> Enum.map(&String.trim/1)    
