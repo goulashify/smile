@@ -1,5 +1,6 @@
 defmodule Emote do
   @moduledoc "Module for converting emoticons and emoji names to real emojis"
+  require Logger
 
   @external_resource emojis = Path.join([__DIR__, "emojis.txt"])
   @external_resource emoticons = Path.join([__DIR__, "emoticons.txt"])
@@ -31,10 +32,16 @@ defmodule Emote do
   end
 
   @doc "Converts text in a way that it replaces mapped emojis to real emojis."
-  def convert_text(text) do
+  def convert_text(text) when is_binary(text) do
     text
     |> String.split()
     |> Enum.map(&convert_word/1)
     |> Enum.join(" ")
   end
+
+  def convert_text(text) do
+    Logger.error("Emote: expected binary, got: #{inspect text}")
+    nil
+  end
+
 end
