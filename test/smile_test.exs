@@ -4,18 +4,26 @@ defmodule EmoteTest do
   doctest Emote
 
   describe "lookup()" do
-    test "should convert single emoticons correctly", do: assert lookup(":pile_of_poo:") == "💩"
-    test "should return the given text when not found", do: assert lookup(":not_yet_existent_emoji:") == nil
+    test "should convert single emoticons correctly",
+      do: assert(lookup(":pile_of_poo:") == "💩")
+
+    test "should return the given text when not found",
+      do: assert(lookup(":not_yet_existent_emoji:") == nil)
   end
 
   describe "convert_mapping_to_emoji" do
-    test "should return emoji when called correctly", do: assert convert_text(":face_with_ok_gesture:") == "🙆"
-    test "should return original text when emoji not found", do: assert convert_text(":not_yet_existent_emoji:") == ":not_yet_existent_emoji:"
+    test "should return emoji when called correctly",
+      do: assert(convert_text(":face_with_ok_gesture:") == "🙆")
+
+    test "should return original text when emoji not found",
+      do: assert(convert_text(":not_yet_existent_emoji:") == ":not_yet_existent_emoji:")
   end
 
   test "converts fine when surrounded by whitespace" do
     assert convert_text("tech debt is :pile_of_poo:") == "tech debt is 💩"
-    assert convert_text(":woo:pile_of_poo:hoo: and it's done!") == ":woo:pile_of_poo:hoo: and it's done!"
+
+    assert convert_text(":woo:pile_of_poo:hoo: and it's done!") ==
+             ":woo:pile_of_poo:hoo: and it's done!"
   end
 
   test "converts more text fine" do

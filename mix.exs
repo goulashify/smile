@@ -2,14 +2,16 @@ defmodule Emote.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :emote,
-     version: "0.1.0",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: dependencies(),
-     description: description(),
-     package: package()]
+    [
+      app: :emote,
+      version: "0.1.0",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: dependencies(),
+      description: description(),
+      package: package()
+    ]
   end
 
   defp dependencies do

@@ -11,16 +11,19 @@ defmodule Emote do
   ]
 
   # load all
-  all = for file_path <- include do
-    for line <- File.stream!(file_path, [], :line) do
-      [emoji, name] = line
-      |> String.split(" ", parts: 2)
-      |> Enum.map(&String.trim/1)
+  all =
+    for file_path <- include do
+      for line <- File.stream!(file_path, [], :line) do
+        [emoji, name] =
+          line
+          |> String.split(" ", parts: 2)
+          |> Enum.map(&String.trim/1)
 
-      {name, emoji}
+        {name, emoji}
+      end
     end
-  end
-  |> List.flatten()
+    |> List.flatten()
+
   # |> IO.inspect()
 
   # load the list of possible strings we can lookup
@@ -37,12 +40,15 @@ defmodule Emote do
   def lookup(_), do: nil
 
   @doc "Converts mapping to emoji, eg \":face_with_ok_gesture:\" to 🙆, returns original text when emoji not found, helper function for convert_text."
-  def convert_word(word) when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 85 do # adjust this based on shortest/longest emoticons / emoji names
+  # adjust this based on shortest/longest emoticons / emoji names
+  def convert_word(word)
+      when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 85 do
     case lookup(word) do
       nil -> word
       emoji -> emoji
     end
   end
+
   def convert_word(word), do: word
 
   @doc "Converts text in a way that it replaces mapped emojis to real emojis."
@@ -62,8 +68,7 @@ defmodule Emote do
   # end
 
   def convert_text(text) do
-    Logger.error("Emote: expected binary, got: #{inspect text}")
+    Logger.error("Emote: expected binary, got: #{inspect(text)}")
     text
   end
-
 end
