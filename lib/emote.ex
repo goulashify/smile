@@ -41,7 +41,7 @@ defmodule Emote do
 
   @doc "Converts mapping to emoji, eg \":face_with_ok_gesture:\" to 🙆, returns original text when emoji not found, helper function for convert_text."
   # adjust this based on shortest/longest emoticons / emoji names
-  defp convert_word(word)
+  def convert_word(word)
       when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 85 do
     case lookup(word) do
       nil -> word
@@ -49,7 +49,7 @@ defmodule Emote do
     end
   end
 
-  defp convert_word(word), do: word
+  def convert_word(word), do: word
 
   @doc "Converts text in a way that it replaces mapped emojis to real emojis."
   def convert_text(text) when is_binary(text) do
