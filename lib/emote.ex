@@ -33,23 +33,24 @@ defmodule Emote do
 
   # define substitution functions for each
   for {name, emoji} <- all do
-    def lookup(unquote(name)), do: unquote(emoji)
+    defp emoji(unquote(name)), do: unquote(emoji)
   end
 
   @doc "Converts emoticon or name to emoji, eg \":face_with_ok_gesture:\" to 🙆, with fallback returning nil if emoji not found."
-  def lookup(_), do: nil
+  defp emoji(_), do: nil
 
   @doc "Converts mapping to emoji, eg \":face_with_ok_gesture:\" to 🙆, returns original text when emoji not found, helper function for convert_text."
   # adjust this based on shortest/longest emoticons / emoji names
   def convert_word(word)
       when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 85 do
-    case lookup(word) do
+    # TODO? only lookup if starts/ends with ":"
+    case emoji(word) do
       nil -> word
       emoji -> emoji
     end
   end
 
-  def convert_word(word), do: word
+  def convert_word(word), do: word 
 
   @doc "Converts text in a way that it replaces mapped emojis to real emojis."
   def convert_text(text) when is_binary(text) do
@@ -64,7 +65,7 @@ defmodule Emote do
   # @doc "Converts text in a way that it replaces mapped emojis to real emojis."
   # def convert_text(text) when is_binary(text) do
   #   text
-  #   |> String.replace(unquote(names_list), &lookup/1)
+  #   |> String.replace(unquote(names_list), &emoji/1)
   # end
 
   def convert_text(text) do
@@ -80,5 +81,8 @@ defmodule Emote do
     |> Enum.map(&convert_word/1)
     |> Enum.join(" ")
   end
+
+  def lookup(":"<>_ = emoji), do: emoji(emoji) 
+  def lookup(emoji), do: emoji(":#{emoji}:") 
 
 end

@@ -155,6 +155,7 @@
 🙇 :bow:
 🎳 :bowling:
 👦 :boy:
+🥖 :baguette_bread:
 🍞 :bread:
 👰 :bride_with_veil:
 🌉 :bridge_at_night:
