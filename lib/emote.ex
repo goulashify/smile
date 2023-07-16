@@ -1,18 +1,17 @@
 defmodule Emote do
   @moduledoc "Module for converting emoticons and emoji names to real emojis"
   require Logger
-
-  @external_resource emojis = Path.join([__DIR__, "emojis.txt"])
-  @external_resource emoticons = Path.join([__DIR__, "emoticons.txt"])
-
-  include = [
-    emojis,
-    emoticons
-  ]
+  
+  emojis = Path.join([__DIR__, "emojis.txt"])
+  emoticons = Path.join([__DIR__, "emoticons.txt"])
+  # TODO: use @external_resource ? (removed because it was causing constant recompilation)
 
   # load all
-  all =
-    for file_path <- include do
+  # all =
+    for file_path <- [
+    emojis,
+    emoticons
+  ] do
       for line <- File.stream!(file_path, [], :line) do
         [emoji, name] =
           line
@@ -23,20 +22,19 @@ defmodule Emote do
       end
     end
     |> List.flatten()
-
   # |> IO.inspect()
+  # define substitution functions for each
+  # for {name, emoji} <- all do
+    |> Enum.map(fn {name, emoji} ->
+    defp emoji(unquote(name)), do: unquote(emoji)
+  end)
 
   # load the list of possible strings we can lookup
   # names_list = for {name, emoji} <- all do
   #   name
   # end
 
-  # define substitution functions for each
-  for {name, emoji} <- all do
-    defp emoji(unquote(name)), do: unquote(emoji)
-  end
-
-  @doc "Converts emoticon or name to emoji, eg \":face_with_ok_gesture:\" to 🙆, with fallback returning nil if emoji not found."
+  #doc "Converts emoticon or name to emoji, eg \":face_with_ok_gesture:\" to 🙆, with fallback returning nil if emoji not found."
   defp emoji(_), do: nil
 
   @doc "Converts mapping to emoji, eg \":face_with_ok_gesture:\" to 🙆, returns original text when emoji not found, helper function for convert_text."
