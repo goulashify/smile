@@ -1,15 +1,17 @@
-defmodule Smile.Mixfile do
+defmodule Emote.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :smile,
-     version: "0.1.0",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: dependencies(),
-     description: description(),
-     package: package()]
+    [
+      app: :emote,
+      version: "0.1.0",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: dependencies(),
+      description: description(),
+      package: package()
+    ]
   end
 
   defp dependencies do
@@ -18,7 +20,7 @@ defmodule Smile.Mixfile do
 
   defp description do
     """
-      Small lib for converting emoji mappers to emoji characters, like in Slack messages, see GitHub for desc please.
+      Small lib for converting emoticons and emoji mappers to emoji characters
     """
   end
 
@@ -26,9 +28,9 @@ defmodule Smile.Mixfile do
     [
       name: :smile,
       files: ["lib", "mix.exs", "README*"],
-      maintainers: ["Daniel Gulyas"],
+      maintainers: ["Bonfire"],
       licenses: ["WTFPL"],
-      links: %{"GitHub" => "https://github.com/danigulyas/smile"}
+      links: %{"GitHub" => "https://github.com/bonfire-networks/emote"}
     ]
   end
 end
