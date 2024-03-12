@@ -39,46 +39,70 @@ defmodule Emote do
 
   @doc "Converts mapping to emoji, eg \":face_with_ok_gesture:\" to 🙆, returns original text when emoji not found, helper function for convert_text."
   # adjust this based on shortest/longest emoticons / emoji names
-  def convert_word(word)
-      when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 85 do
-    # TODO? only lookup if starts/ends with ":" (but wouldn't work for emoticons)
+  def convert_word(word, custom_fn \\ nil)
+  def convert_word(word, custom_fn)
+      when is_binary(word) and byte_size(word) > 1 and byte_size(word) < 9 do
+    # handles emoticons (which are not wrapped with :)
     case emoji(word) do
-      nil -> word
+      nil -> 
+         maybe_custom_fn(word, custom_fn)
       emoji -> emoji
     end
   end
-  def convert_word(word), do: word 
+  def convert_word(":"<>_ = word, custom_fn)
+      when byte_size(word) > 2 and byte_size(word) < 88 do
+    # handle emojis
+    case emoji(word) do
+      nil -> 
+         maybe_custom_fn(word, custom_fn)
+      emoji -> emoji
+    end
+  end
+  def convert_word(":"<>_ = word, custom_fn)
+      when byte_size(word) > 87 do
+    # handle custom fn for long words
+     maybe_custom_fn(word, custom_fn)
+  end
+  def convert_word(word, _), do: word 
+
+  defp maybe_custom_fn(word, custom_fn) when is_function(custom_fn, 1), do: custom_fn.(word)
+  defp maybe_custom_fn(word, _custom_fn), do: word
+
 
   @doc "Converts text in a way that it replaces mapped emojis to real emojis."
-  def convert_text(text, custom_emoji \\ []) 
+  def convert_text(text, opts \\ []) 
 
-  def convert_text(text, custom_emoji) when is_binary(text) do
+  def convert_text(text, opts) when is_binary(text) do
     text
     # |> String.split(~r{<|>}, include_captures: true)
     # |> Enum.flat_map(&String.split/1)
     |> String.split("\n")
-    |> Enum.map(& convert_line(&1))
+    |> Enum.map(& convert_line(&1, opts[:custom_fn]))
     |> Enum.join("\n")
-    |> maybe_custom(custom_emoji)
+    |> maybe_custom(opts[:custom_emoji])
   end
 
   # @doc "Converts text in a way that it replaces mapped emojis to real emojis."
-  # def convert_text(text, custom_emoji) when is_binary(text) do
+  # def convert_text(text, _opts) when is_binary(text) do
   #   text
   #   |> String.replace(unquote(names_list), &emoji/1)
   # end
 
-  def convert_text(text, _custom_emoji) do
+  def convert_text(text, _opts) do
     Logger.error("Emote: expected binary, got: #{inspect(text)}")
     text
   end
 
-  defp convert_line(text) when is_binary(text) do
+  defp convert_line(text, custom_fn) when is_binary(text) do
     text
     # |> String.split(~r{<|>}, include_captures: true)
     # |> Enum.flat_map(&String.split/1)
     |> String.split() # by whitespace
-    |> Enum.map(& convert_word(&1))
+    |> Enum.map(& 
+      &1
+      |> String.trim()
+      |> convert_word(custom_fn)
+    )
     |> Enum.join(" ")
   end
   
@@ -88,13 +112,14 @@ defmodule Emote do
         String.replace(text, ":#{emoji}:", prepare_emoji_code(emoji, text_only(file)))
     end)
   end
+  def maybe_custom(text, _custom_emoji), do: text
 
-  defp prepare_emoji_code(emoji, file) do
+  def prepare_emoji_code(emoji, file) do
     # TODO: support SVG ones?
     "<img class='emoji #{emoji}' alt='#{emoji}' title=':#{emoji}:' src='#{(file)}' />"
   end
 
-    defp text_only(content) when is_binary(content) do
+  defp text_only(content) when is_binary(content) do
     if Code.ensure_loaded?(HtmlSanitizeEx) do
       HtmlSanitizeEx.strip_tags(content)
     else
